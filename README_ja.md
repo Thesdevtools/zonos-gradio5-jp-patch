@@ -85,7 +85,7 @@ eSpeak（phonemizer）が処理できない文字を変換・除去します：
 
 - `prefix_audio`: 現在無効化（安定性のため）
 - `emotion`: unconditional設定を強制（自動判定に任せる）
-- `seed`: 420で固定（再現性確保、必要に応じて変更可）
+
 
 ## 設定変更
 

@@ -85,7 +85,7 @@ Set to `MAX_TEXT_LENGTH = 100`. Excess text is truncated and logged:
 
 - `prefix_audio`: Currently disabled (for stability)
 - `emotion`: Forced to unconditional (auto-detection)
-- `seed`: Fixed at 420 (for reproducibility, can be changed)
+
 
 ## Configuration
 
