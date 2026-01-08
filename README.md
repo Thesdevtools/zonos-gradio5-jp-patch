@@ -75,6 +75,7 @@ Set to `MAX_TEXT_LENGTH = 100`. Excess text is truncated and logged:
 
 - `prefix_audio`: Currently disabled (for stability)
 - `emotion`: Forced to unconditional (auto-detection)
+- Audio output is explicitly converted to int16 format (avoids Gradio warning)
 
 
 ## Configuration

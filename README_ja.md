@@ -75,6 +75,7 @@ eSpeak（phonemizer）が処理できない文字を変換・除去します：
 
 - `prefix_audio`: 現在無効化（安定性のため）
 - `emotion`: unconditional設定を強制（自動判定に任せる）
+- 音声出力をint16形式に明示的に変換（Gradio警告回避）
 
 
 ## 設定変更
