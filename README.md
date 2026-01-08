@@ -28,10 +28,10 @@ This patch adds the following features and fixes to the original `gradio_interfa
 
 ## Installation
 
-1. Install [Zyphra/Zonos](https://github.com/Zyphra/Zonos) as usual
+1. Install [Zyphra/Zonos](https://github.com/Zyphra/Zonos) on WSL (Ubuntu) as usual
 2. Download `gradio_interface.py` from this repository
-3. Replace the original `gradio_interface.py` in your Zonos installation directory with the downloaded file
-4. Start Zonos as usual
+3. Replace the original `gradio_interface.py` in your Zonos installation directory (on WSL) with the downloaded file
+4. Start Zonos on WSL as usual
 
 If successful, you will see the following banner at startup:
 

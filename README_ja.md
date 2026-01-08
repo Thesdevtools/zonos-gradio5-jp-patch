@@ -28,10 +28,10 @@ SkyrimNet、CHIM などの日本語TTSクライアントでの利用を想定し
 
 ## インストール方法
 
-1. [Zyphra/Zonos](https://github.com/Zyphra/Zonos) を通常通りインストール
+1. WSL (Ubuntu) 上で [Zyphra/Zonos](https://github.com/Zyphra/Zonos) を通常通りインストール
 2. このリポジトリから `gradio_interface.py` をダウンロード
-3. Zonosのインストールディレクトリにある `gradio_interface.py` を、ダウンロードしたファイルで上書き
-4. 通常通りZonosを起動
+3. WSL上のZonosインストールディレクトリにある `gradio_interface.py` を、ダウンロードしたファイルで上書き
+4. WSL上でZonosを起動
 
 起動時に以下のようなバナーが表示されれば成功です：
 
