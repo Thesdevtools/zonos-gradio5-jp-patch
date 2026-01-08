@@ -92,6 +92,12 @@ Apache License 2.0
 
 Based on [Zyphra/Zonos](https://github.com/Zyphra/Zonos)
 
+## コントリビューション
+
+> ⚠️ **PRは受け付けていません。** これは特定用途向けの個人パッチです。
+
+改善や修正がある場合は、このリポジトリを**フォーク**してご自身のリポジトリで変更してください。
+
 ## 謝辞
 
 - [Zyphra](https://www.zyphra.com/) - Zonos TTS

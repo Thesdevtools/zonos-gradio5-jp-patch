@@ -92,6 +92,12 @@ Apache License 2.0
 
 Based on [Zyphra/Zonos](https://github.com/Zyphra/Zonos)
 
+## Contributing
+
+> ⚠️ **Pull Requests are not accepted.** This is a personal patch for specific use cases.
+
+If you have improvements or fixes, please **fork this repository** and make your changes there.
+
 ## Acknowledgments
 
 - [Zyphra](https://www.zyphra.com/) - Zonos TTS
