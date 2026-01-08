@@ -29,25 +29,15 @@ SkyrimNet、CHIM などの日本語TTSクライアントでの利用を想定し
 ## インストール方法
 
 1. [Zyphra/Zonos](https://github.com/Zyphra/Zonos) を通常通りインストール
-2. このリポジトリの `gradio_interface.py` で上書き：
-
-```bash
-cp gradio_interface.py ~/Zonos/gradio_interface.py
-```
-
-3. Zonosを起動：
-
-```bash
-cd ~/Zonos
-source .venv/bin/activate
-uv run gradio_interface.py
-```
+2. このリポジトリから `gradio_interface.py` をダウンロード
+3. Zonosのインストールディレクトリにある `gradio_interface.py` を、ダウンロードしたファイルで上書き
+4. 通常通りZonosを起動
 
 起動時に以下のようなバナーが表示されれば成功です：
 
 ```
 ==================================================
-  Zonos Server Patch Version: 1.0.3
+  Zonos Server Patch Version: 1.0.4
 ==================================================
 ```
 

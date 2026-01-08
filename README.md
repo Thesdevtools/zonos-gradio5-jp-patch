@@ -29,25 +29,15 @@ This patch adds the following features and fixes to the original `gradio_interfa
 ## Installation
 
 1. Install [Zyphra/Zonos](https://github.com/Zyphra/Zonos) as usual
-2. Replace `gradio_interface.py` with this patched version:
-
-```bash
-cp gradio_interface.py ~/Zonos/gradio_interface.py
-```
-
-3. Start Zonos:
-
-```bash
-cd ~/Zonos
-source .venv/bin/activate
-uv run gradio_interface.py
-```
+2. Download `gradio_interface.py` from this repository
+3. Replace the original `gradio_interface.py` in your Zonos installation directory with the downloaded file
+4. Start Zonos as usual
 
 If successful, you will see the following banner at startup:
 
 ```
 ==================================================
-  Zonos Server Patch Version: 1.0.3
+  Zonos Server Patch Version: 1.0.4
 ==================================================
 ```
 
