@@ -1,7 +1,3 @@
-# === Zonos Server Patch Version ===
-PATCH_VERSION = "1.0.4"  # Public release version
-# ==================================
-
 import torch
 import torchaudio
 import gradio as gr
@@ -13,23 +9,23 @@ import re
 import traceback
 from datetime import datetime
 
-# Save original functions for patching
+# オリジナルの関数を保存
 _original_check_allowed = getattr(gradio.processing_utils, '_check_allowed', None)
 _original_hash_file = getattr(gradio.processing_utils, 'hash_file', None)
 _original_save_file_to_cache = getattr(gradio.processing_utils, 'save_file_to_cache', None)
 
 def _logged_check_allowed(path, check_in_upload_folder):
-    """Wrapper function that bypasses path check (returns True always)"""
+    """パスチェック時にログを出力するラッパー関数"""
     # timestamp = datetime.now().strftime("%H:%M:%S.%f")[:-3]
     # print(f"[{timestamp}] [PATH_CHECK] path={path}, check_in_upload_folder={check_in_upload_folder}")
-    # Show partial stack trace (to identify caller)
+    # スタックトレースの一部を表示（呼び出し元を特定）
     # stack = traceback.extract_stack()
-    # for frame in stack[-6:-1]:  # Last 5 frames
+    # for frame in stack[-6:-1]:  # 直近5フレーム
     #     print(f"    -> {frame.filename}:{frame.lineno} in {frame.name}")
-    return True  # Always return OK
+    return True  # 常にOKを返す
 
 def _safe_hash_file(file_path, chunk_num_blocks=128):
-    """Wrapper that safely handles directories and empty paths"""
+    """ディレクトリや空パスを安全に処理するラッパー"""
     # timestamp = datetime.now().strftime("%H:%M:%S.%f")[:-3]
     if not file_path or file_path == "":
         # print(f"[{timestamp}] [HASH_FILE] SKIP: empty path")
@@ -40,32 +36,32 @@ def _safe_hash_file(file_path, chunk_num_blocks=128):
     return _original_hash_file(file_path, chunk_num_blocks)
 
 def _safe_save_file_to_cache(file_path, cache_dir):
-    """Wrapper that safely handles directories and empty paths"""
+    """ディレクトリや空パスを安全に処理するラッパー"""
     # timestamp = datetime.now().strftime("%H:%M:%S.%f")[:-3]
     if not file_path or file_path == "":
         # print(f"[{timestamp}] [SAVE_TO_CACHE] SKIP: empty path")
-        return "/dev/null"  # Return dummy path
+        return "/dev/null"  # ダミーパスを返す
     if os.path.isdir(file_path):
         # print(f"[{timestamp}] [SAVE_TO_CACHE] SKIP: directory path={file_path}")
-        return \"/dev/null\"  # Return dummy path
+        return "/dev/null"  # ダミーパスを返す
     return _original_save_file_to_cache(file_path, cache_dir)
 
-# Patch Block.async_move_resource_to_block_cache
+# Block.async_move_resource_to_block_cache をパッチ
 _original_async_move_resource = getattr(gradio.blocks.Block, 'async_move_resource_to_block_cache', None)
 
 async def _safe_async_move_resource_to_block_cache(self, url_or_file_path, **kwargs):
-    """Wrapper that safely handles directories and empty paths"""
+    """ディレクトリや空パスを安全に処理するラッパー"""
     # print(f"[DEBUG] async_move_resource called with: {url_or_file_path}")
     if not url_or_file_path or url_or_file_path == "":
         # print(f"[MOVE_RESOURCE] SKIP: empty path")
-        # Return dummy path (returning None would cause ValueError)
+        # ダミーパスを返す（None を返すと ValueError が発生するため）
         return "/dev/null"
     if os.path.isdir(url_or_file_path):
         # print(f"[MOVE_RESOURCE] SKIP: directory path={url_or_file_path}")
         return "/dev/null"
     return await _original_async_move_resource(self, url_or_file_path, **kwargs)
 
-# Apply patches
+# パッチを適用
 gradio.processing_utils._check_allowed = _logged_check_allowed
 gradio.processing_utils.hash_file = _safe_hash_file
 gradio.processing_utils.save_file_to_cache = _safe_save_file_to_cache
@@ -80,9 +76,6 @@ CURRENT_MODEL = None
 
 SPEAKER_EMBEDDING = None
 SPEAKER_AUDIO_PATH = None
-
-# Text length limit (truncate if exceeded)
-MAX_TEXT_LENGTH = 100  # Limit to 100 chars to prevent client timeout
 
 
 
@@ -103,7 +96,7 @@ SANITIZE_MAPPING = {
     'ｕ': 'u', 'ｖ': 'v', 'ｗ': 'w', 'ｘ': 'x', 'ｙ': 'y', 'ｚ': 'z'
 }
 
-SANITIZE_REGEX = re.compile(r"[#＃@＠\*＊\^＾~～`｀\|｜\\＼/<>＜＞\[\]［］\{\}｛｝=＝\+＋_＿・•◆◇■□●○★☆▲△▼▽→←↑↓⇒⇐♪♫§†‡※「」『』【】《》〈〉（）\"''…―─]")
+SANITIZE_REGEX = re.compile(r"[#＃@＠\*＊\^＾~～`｀\|｜\\＼/<>＜＞\{\}｛｝=＝\+＋_＿・•◆◇■□●○★☆▲△▼▽→←↑↓⇒⇐♪♫§†‡※「」『』【】《》〈〉（）\(\)\"''…―─]")
 
 def sanitize_text(text: str) -> str:
     if not text:
@@ -219,39 +212,31 @@ def generate_audio(
     # print(f"[DEBUG] generate_audio called")
     # print(f"[DEBUG]   speaker_audio={speaker_audio}")
     # print(f"[DEBUG]   prefix_audio={prefix_audio}")
-    # === Force disable prefix_audio ===
+    # === prefix_audio を強制的に無効化 ===
     if prefix_audio is not None:
         # print(f"[INFO] Ignoring prefix_audio: {prefix_audio}")
         prefix_audio = None
     
-    # === Force add 'emotion' to unconditional_keys ===
+    # === unconditional_keys に 'emotion' を強制追加 ===
     if 'emotion' not in unconditional_keys:
         # print(f"[INFO] Adding 'emotion' to unconditional_keys")
         unconditional_keys = list(unconditional_keys) + ['emotion']
-    # === End of forced settings ===
+    # === 強制設定終了 ===
     
     """
     Generates audio based on the provided UI parameters.
     We do NOT use language_id or ctc_loss even if the model has them.
     """
-    # === Ignore ping requests ===
+    # === pingリクエストを無視 ===
     if text and text.strip().lower() == "ping":
         # print("[INFO] Ignoring ping request")
-        # Return silent audio (treated as 200 OK)
+        # 無音のオーディオを返す（200 OK として扱われる）
         import numpy as np
-        silent_audio = np.zeros(4410, dtype=np.int16)  # 0.1s silence (44100Hz, int16)
+        silent_audio = np.zeros(4410, dtype=np.int16)  # 0.1秒の無音（44100Hz, int16形式）
         return (44100, silent_audio), 420
     
     text_orig = text
     text = sanitize_text(text)
-    
-    # Text length limit: truncate excess
-    text_before_truncate = None
-    if len(text) > MAX_TEXT_LENGTH:
-        text_before_truncate = text
-        text = text[:MAX_TEXT_LENGTH]
-        print(f"[WARN] Text truncated: {len(text_before_truncate)} -> {MAX_TEXT_LENGTH} chars")
-    
     selected_model = load_model_if_needed(model_choice)
 
     speaker_noised_bool = bool(speaker_noised)
@@ -272,15 +257,17 @@ def generate_audio(
     # This is a bit ew, but works for now.
     global SPEAKER_AUDIO_PATH, SPEAKER_EMBEDDING
 
+    # === シード値を強制的に420に設定 ===
+    original_seed = seed
+    seed = 420
+    # print(f"[INFO] Forcing seed: {original_seed} -> {seed}")
+    
     if randomize_seed:
         seed = torch.randint(0, 2**32 - 1, (1,)).item()
     torch.manual_seed(seed)
 
-    # ===== DEBUG OUTPUT =====
+    # ===== DEBUG OUTPUT (最小限) =====
     print(f"[TEXT] {text}")
-    if text_before_truncate is not None:
-        truncated_part = text_before_truncate[MAX_TEXT_LENGTH:]
-        print(f"[TEXT_TRUNCATED] {truncated_part}")
     # print("\\n" + "=" * 50)
     # print("[DEBUG] TTS Generation Request")
     # print("=" * 50)
@@ -577,9 +564,6 @@ def build_interface():
 
 
 if __name__ == "__main__":
-    print("=" * 50)
-    print(f"  Zonos Server Patch Version: {PATCH_VERSION}")
-    print("=" * 50)
     demo = build_interface()
     share = getenv("GRADIO_SHARE", "False").lower() in ("true", "1", "t")
     demo.launch(server_name="0.0.0.0", server_port=7860, share=share, allowed_paths=[os.path.abspath(".")])
